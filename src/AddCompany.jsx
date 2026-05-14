@@ -46,9 +46,9 @@ function AddCompany({
 
             const token =
                 localStorage.getItem('token');
-
+const API = import.meta.env.VITE_API_URL;
             const res = await fetch(
-                'http://localhost:5000/api/auth/add-company',
+                `${API}/api/auth/add-company`,
                 {
                     method: 'POST',
 
