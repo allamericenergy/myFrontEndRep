@@ -130,7 +130,7 @@ function AdminDashboard() {
                 {/* Logo */}
                 <div className="nav-left">
                     <img
-                        src="/src/assets/Logo.jpg"
+                        src="/assets/Logo.jpg"
                         alt="Logo"
                         className="nav-logo"
                     />
