@@ -54,7 +54,7 @@ function Login() {
       <div className="login-right">
         <div className="login-card">
           <img
-            src="./src/assets/Logo.jpg"
+            src="/assets/Logo.jpg"
             alt="All American Energy Logo"
             width={200} height={75}
           />
