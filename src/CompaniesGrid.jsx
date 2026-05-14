@@ -42,6 +42,7 @@ function CompaniesGrid() {
 
     }, []);
     const [open, setOpen] = useState(false);
+    const API = import.meta.env.VITE_API_URL;
     const fetchCompanies = async () => {
 
         try {
@@ -52,7 +53,7 @@ function CompaniesGrid() {
                 localStorage.getItem('token');
 
             const res = await fetch(
-                'http://localhost:5000/api/auth/companies',
+                `${API}/api/auth/companies`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
