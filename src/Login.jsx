@@ -54,8 +54,13 @@ function Login() {
 
       <div className="login-right">
         <div className="login-card">
+<<<<<<< HEAD
           <img 
             src="./src/assets/Logo.jpg"
+=======
+          <img
+            src="/assets/Logo.jpg"
+>>>>>>> feec35cc30d376f3f341279aaddb0b5487e83c36
             alt="All American Energy Logo"
             width={200} height={75}
           />

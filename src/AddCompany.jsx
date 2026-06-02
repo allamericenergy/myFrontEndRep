@@ -29,8 +29,7 @@ function AddCompany({
     const [loading, setLoading] =
         useState(false);
 
-    const API =
-        import.meta.env.VITE_API_URL;
+    const API = import.meta.env.VITE_API_URL;
 
     // EDIT MODE PREFILL
 

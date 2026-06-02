@@ -133,7 +133,7 @@ function AdminDashboard() {
 
 
                 {/* Main Dashboard */}
-                <div className="dashboard-content">
+               /*  <div className="dashboard-content"> */
 
                     {/* <div className="page-title">
           <h1>Admin Dashboard</h1>
