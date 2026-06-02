@@ -9,18 +9,18 @@ body {
   background: #f4f7fb;
 }
 
-/* Main Layout */
+/* Main Layout  background-image: url('./assets/dashboard-bg.jpg');
+  background-size: cover;
+  background-position: center; background: #f4f7fb;*/
 
 .dashboard-container {
   width: 100%;
   min-height: 100vh;
-  background: #f4f7fb;
+ 
 
   display: flex;
   flex-direction: column;
-  background-image: url('./assets/dashboard-bg.jpg');
-  background-size: cover;
-  background-position: center;
+ 
 }
 /* Top Navbar */
 

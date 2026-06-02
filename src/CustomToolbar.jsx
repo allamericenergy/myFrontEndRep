@@ -20,9 +20,11 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 function CustomToolbar({
     exportExcel,
     onAdd,
+    entityName = 'Company', // dynamic prop
 }) {
 
     return (
+        
         <GridToolbarContainer
             sx={{
                 padding: '12px 16px',
@@ -46,7 +48,7 @@ function CustomToolbar({
                     marginRight: '20px',
                 }}
             >
-               New Company List
+              {entityName} List
             </Typography>
 
             {/* Right Side */}
@@ -70,7 +72,7 @@ function CustomToolbar({
                 </div>
 
                 {/* Add */}
-                <Tooltip title="Add Company">
+                <Tooltip title={`Add ${entityName}`}>
                     <IconButton
                         onClick={onAdd}
                     >

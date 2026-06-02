@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Login.css';
+//import {logo} from './assets/Logo.jpg'
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -12,10 +13,10 @@ function Login() {
     e.preventDefault();
 
     try {
-      setLoading(true);
+          setLoading(true);
 
       const res = await axios.post(
-        `${API}/api/auth/login`,
+        `http://localhost:5000/api/auth/login`,
         {
           email,
           password,
@@ -53,14 +54,14 @@ function Login() {
 
       <div className="login-right">
         <div className="login-card">
-          <img
+          <img 
             src="./src/assets/Logo.jpg"
             alt="All American Energy Logo"
             width={200} height={75}
           />
           <br />
           <br />
-          <h2>Welcome</h2>
+          <h2>Welcome</h2>  
 
           <p className="subtitle">
             Login to your account

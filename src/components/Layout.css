@@ -1,0 +1,44 @@
+.layout {
+
+    display: flex;
+
+    min-height: 100vh;
+
+
+    background-image: url('../assets/dashboard-bg.jpg');
+    background-size: cover;
+    background-position: center;
+
+
+}
+
+.main-layout {
+
+    flex: 1;
+
+}
+
+.page-content {
+
+    padding: 20px;
+
+}
+.sticky-actions {
+    position: sticky !important;
+    right: 0;
+    background: white;
+    z-index: 10;
+}
+.MuiDataGrid-columnHeader.sticky-right {
+    position: sticky !important;
+    right: 0;
+    z-index: 1001 !important;
+    background: white !important;
+}
+
+.MuiDataGrid-cell.sticky-right {
+    position: sticky !important;
+    right: 0;
+    z-index: 1000 !important;
+    background: white !important;
+}

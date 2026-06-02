@@ -5,15 +5,15 @@ import React, {
 
 import {
     DataGrid,
-    GridToolbar
+    
 } from '@mui/x-data-grid';
 
 import {
     Box,
-    Typography
+    
 } from '@mui/material';
-import FileDownloadIcon from '@mui/icons-material/Download';
-import AddIcon from '@mui/icons-material/Add';
+
+
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import CustomToolbar from './CustomToolbar';
@@ -27,8 +27,21 @@ import {
 import CloseIcon
     from '@mui/icons-material/Close';
 import AddCompany from './AddCompany';
+import {
+    Stack
+} from '@mui/material';
 
-function CompaniesGrid() {
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import EditIcon from '@mui/icons-material/Edit';
+import Tooltip from '@mui/material/Tooltip';
+
+function CompaniesGrid({
+
+    pageSize = 10,
+    height = 500,
+    showToolbar = true,
+
+}) {
 
     const [companies, setCompanies] =
         useState([]);
@@ -42,6 +55,7 @@ function CompaniesGrid() {
 
     }, []);
     const [open, setOpen] = useState(false);
+    const API = import.meta.env.VITE_API_URL;
     const fetchCompanies = async () => {
 
         try {
@@ -52,7 +66,7 @@ function CompaniesGrid() {
                 localStorage.getItem('token');
 
             const res = await fetch(
-                'http://localhost:5000/api/auth/companies',
+                `${API}/api/auth/companies`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -113,7 +127,27 @@ function CompaniesGrid() {
         );
     };
 
+    const renderWithTooltip = (params) => (
 
+        <Tooltip
+            title={params.value || ''}
+            arrow
+        >
+
+            <span
+                style={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    width: '100%',
+                    display: 'block',
+                }}
+            >
+                {params.value}
+            </span>
+
+        </Tooltip>
+    );
     // Columns
     const columns = [
 
@@ -127,19 +161,22 @@ function CompaniesGrid() {
         {
             field: 'Company Name',
             headerName: 'Company',
-            flex: 1,
+            width: 200,
+            renderCell: renderWithTooltip,
         },
 
         {
             field: 'Legal Entity Name',
             headerName: 'Legal Entity',
-            flex: 1,
+            width: 200,
+            renderCell: renderWithTooltip,
         },
 
         {
             field: 'Mailing Address',
             headerName: 'Address',
-            flex: 1,
+            width: 250,
+            renderCell: renderWithTooltip,
         },
 
         {
@@ -156,25 +193,84 @@ function CompaniesGrid() {
         {
             field: 'URL',
             headerName: 'Company URL',
-            flex: 1,
+            width: 200,
+
+            renderCell: (params) => (
+                <Tooltip
+                    title={params.value || ''}
+                    arrow
+                >
+                    <a
+                        href={params.value}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="grid-link"
+
+                        style={{
+                            color: '#1976d2',
+                            textDecoration: 'none',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            width: '100%',
+                            display: 'block',
+                        }}
+                    >
+                        {params.value}
+                    </a>
+                </Tooltip>
+            ),
+        },
+        {
+            field: 'actions',
+            headerName: 'Actions',
+            width: 80,
+            sortable: false,
+            filterable: false,
 
             renderCell: (params) => (
 
-                <a
-                    href={params.value}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="grid-link"
+                <Stack
+                    direction="row"
+                    spacing={1}
                 >
-                    {params.value}
-                </a>
+
+                    <Tooltip title="View">
+
+                        <IconButton
+                            color="primary"
+                            size="small"
+                            onClick={() =>
+                                handleView(params.row)
+                            }
+                        >
+                            <VisibilityIcon
+                                fontSize="small"
+                            />
+                        </IconButton>
+
+                    </Tooltip>
+
+                    <Tooltip title="Edit">
+
+                        <IconButton
+                            color="secondary"
+                            size="small"
+                            onClick={() =>
+                                handleEdit(params.row)
+                            }
+                        >
+                            <EditIcon fontSize="small" />
+                        </IconButton>
+
+                    </Tooltip>
+
+                </Stack>
             ),
         },
 
     ];
     const navigate = useNavigate();
-
-
     const openPopup = () => {
         setOpen(true);
     };
@@ -182,7 +278,29 @@ function CompaniesGrid() {
     const closePopup = () => {
         setOpen(false);
     };
+    const [selectedCompany, setSelectedCompany] = useState(null);
+    const [mode, setMode] = useState('add');
+    const handleView = (row) => {
 
+        navigate(`/viewCompany/${row.id}`, {
+            state: row,
+        });
+
+    };
+    const handleEdit = (row) => {
+
+        setSelectedCompany(row);
+        setMode('edit');
+        setOpen(true);
+
+    };
+    const handleAddCompany = () => {
+
+        setSelectedCompany(null);
+        setMode('add');
+        setOpen(true);
+
+    };
 
     return (
         <Box
@@ -199,7 +317,7 @@ function CompaniesGrid() {
             <div
                 style={{
                     width: '100%',
-                    height: 500,
+                    height,
                 }}
             >
 
@@ -213,20 +331,25 @@ function CompaniesGrid() {
                     initialState={{
                         pagination: {
                             paginationModel: {
-                                pageSize: 10,
+                                pageSize,
                             },
                         },
                     }}
 
-                    slots={{
-                        toolbar: () => (
-                            <CustomToolbar
-                                exportExcel={exportExcel}
-                                onAdd={openPopup}
-                            />
-                        ),
-                    }}
-                    showToolbar
+                    slots={
+                        showToolbar
+                            ? {
+                                toolbar: () => (
+                                    <CustomToolbar
+                                        exportExcel={exportExcel}
+                                        onAdd={handleAddCompany}
+                                        entityName = 'Company' // dynamic prop
+                                    />
+                                ),
+                            }
+                            : {}
+                    }
+                    showToolbar={showToolbar}
                     sx={{
                         border: 0,
 
@@ -234,7 +357,7 @@ function CompaniesGrid() {
                         {
                             backgroundColor:
                                 '#f3f4f6',
-                            fontSize: '15px',
+                            fontSize: '14px',
                             fontWeight: 'bold',
                         },
 
@@ -247,7 +370,14 @@ function CompaniesGrid() {
                         '& .MuiDataGrid-cell': {
                             borderBottom:
                                 '1px solid #f1f1f1',
+                            fontSize: '13px',
+                            alignItems: 'center',
                         },
+                        '& .MuiDataGrid-row': {
+                            minHeight: '42px !important',
+                            maxHeight: '42px !important',
+                        },
+
 
                     }}
                 />
@@ -274,7 +404,9 @@ function CompaniesGrid() {
                     }}
                 >
 
-                    Add Company
+                    {mode === 'add'
+                        ? 'Add Company'
+                        : 'Edit Company'}
 
                     <IconButton
                         onClick={closePopup}
@@ -291,6 +423,8 @@ function CompaniesGrid() {
                     <AddCompany
                         fetchCompanies={fetchCompanies}
                         closePopup={closePopup}
+                        selectedCompany={selectedCompany}
+                        mode={mode}
                     />
 
                 </DialogContent>

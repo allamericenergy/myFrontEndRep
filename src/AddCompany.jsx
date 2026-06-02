@@ -1,12 +1,15 @@
 import React, {
-    useState
+    useState,
+    useEffect
 } from 'react';
 
 import './AddCompany.css';
 
 function AddCompany({
     fetchCompanies,
-    closePopup
+    closePopup,
+    selectedCompany,
+    mode,
 }) {
 
     const [formData, setFormData] =
@@ -19,12 +22,74 @@ function AddCompany({
             TaxID: '',
             URL: '',
             contractsFolderId: 'vxcvcv',
-            UtilityBillsfolderId: 'vcxvxcvxc'
+            UtilityBillsfolderId: 'vcxvxcvxc',
 
         });
 
     const [loading, setLoading] =
         useState(false);
+
+    const API =
+        import.meta.env.VITE_API_URL;
+
+    // EDIT MODE PREFILL
+
+    useEffect(() => {
+
+        if (
+            mode === 'edit' &&
+            selectedCompany
+        ) {
+
+            setFormData({
+
+                CompanyName:
+                    selectedCompany[
+                    'Company Name'
+                    ] || '',
+
+                LegalEntityName:
+                    selectedCompany[
+                    'Legal Entity Name'
+                    ] || '',
+
+                MailingAddress:
+                    selectedCompany[
+                    'Mailing Address'
+                    ] || '',
+
+                PhoneNumber:
+                    selectedCompany[
+                    'Phone Number'
+                    ] || '',
+
+                TaxID:
+                    selectedCompany[
+                    'Tax ID'
+                    ] || '',
+
+                URL:
+                    selectedCompany[
+                    'URL'
+                    ] || '',
+
+                contractsFolderId:
+                    selectedCompany[
+                    'contractsFolderId'
+                    ] || 'vxcvcv',
+
+                UtilityBillsfolderId:
+                    selectedCompany[
+                    'UtilityBillsfolderId'
+                    ] || 'vcxvxcvxc',
+
+            });
+
+        }
+
+    }, [selectedCompany, mode]);
+
+    // INPUT CHANGE
 
     const handleChange = (e) => {
 
@@ -35,6 +100,8 @@ function AddCompany({
         });
 
     };
+
+    // SUBMIT
 
     const handleSubmit = async (e) => {
 
@@ -47,31 +114,48 @@ function AddCompany({
             const token =
                 localStorage.getItem('token');
 
-            const res = await fetch(
-                'http://localhost:5000/api/auth/add-company',
-                {
-                    method: 'POST',
+            const url =
+                mode === 'edit'
+                    ? `${API}/api/auth/company/${selectedCompany.id}`
+                    : `${API}/api/auth/add-company`;
 
-                    headers: {
-                        'Content-Type':
-                            'application/json',
+            const method =
+                mode === 'edit'
+                    ? 'PUT'
+                    : 'POST';
 
-                        Authorization:
-                            `Bearer ${token}`,
-                    },
+            const res = await fetch(url, {
 
-                    body: JSON.stringify(
-                        formData
-                    ),
-                }
-            );
+                method,
+
+                headers: {
+
+                    'Content-Type':
+                        'application/json',
+
+                    Authorization:
+                        `Bearer ${token}`,
+                },
+
+                body: JSON.stringify(
+                    formData
+                ),
+
+            });
 
             const data =
                 await res.json();
 
-            // alert(data.message);
+            console.log(data);
+
+            fetchCompanies();
+
+            closePopup();
+
+            // RESET FORM
 
             setFormData({
+
                 CompanyName: '',
                 LegalEntityName: '',
                 MailingAddress: '',
@@ -79,10 +163,9 @@ function AddCompany({
                 TaxID: '',
                 URL: '',
                 contractsFolderId: 'vxcvcv',
-                UtilityBillsfolderId: 'vcxvxcvxc'
-            });
+                UtilityBillsfolderId: 'vcxvxcvxc',
 
-            fetchCompanies();
+            });
 
         } catch (error) {
 
@@ -97,12 +180,14 @@ function AddCompany({
     };
 
     return (
+
         <div className="add-company-card">
 
             <form
                 onSubmit={handleSubmit}
                 className="company-form"
             >
+
                 <input
                     type="text"
                     name="CompanyName"
@@ -113,6 +198,7 @@ function AddCompany({
                     onChange={handleChange}
                     required
                 />
+
                 <input
                     type="text"
                     name="LegalEntityName"
@@ -123,6 +209,7 @@ function AddCompany({
                     onChange={handleChange}
                     required
                 />
+
                 <input
                     type="text"
                     name="PhoneNumber"
@@ -132,6 +219,7 @@ function AddCompany({
                     }
                     onChange={handleChange}
                 />
+
                 <input
                     type="text"
                     name="TaxID"
@@ -162,16 +250,19 @@ function AddCompany({
                     onChange={handleChange}
                 />
 
-
                 <button
                     type="submit"
                     className="save-btn"
                 >
+
                     {
                         loading
                             ? 'Saving...'
-                            : 'Add Company'
+                            : mode === 'edit'
+                                ? 'Update Company'
+                                : 'Add Company'
                     }
+
                 </button>
 
             </form>
