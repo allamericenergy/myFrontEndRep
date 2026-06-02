@@ -13,10 +13,10 @@ function Login() {
     e.preventDefault();
 
     try {
-          setLoading(true);
+      setLoading(true);
 
       const res = await axios.post(
-        `http://localhost:5000/api/auth/login`,
+        `${API}/api/auth/login`,
         {
           email,
           password,
@@ -54,19 +54,14 @@ function Login() {
 
       <div className="login-right">
         <div className="login-card">
-<<<<<<< HEAD
-          <img 
-            src="./src/assets/Logo.jpg"
-=======
           <img
-            src="/assets/Logo.jpg"
->>>>>>> feec35cc30d376f3f341279aaddb0b5487e83c36
+            src="./src/assets/Logo.jpg"
             alt="All American Energy Logo"
             width={200} height={75}
           />
           <br />
           <br />
-          <h2>Welcome</h2>  
+          <h2>Welcome</h2>
 
           <p className="subtitle">
             Login to your account
