@@ -92,6 +92,7 @@ const AddMeter = () => {
             ]);
 
             setCompanies(companyRes.data || []);
+           // console.log("CompanyNAme: ",companyRes.data)
             setProducts(productRes.data || []);
             setOnsitegeneration(onsitegeneration.data || []);
             setIenergybill(ienergybill.data || []);
@@ -148,7 +149,7 @@ const AddMeter = () => {
         try {
 
             const token = localStorage.getItem('token');
-
+//console.log(formData);
             await axios.post(
                 `${API}/api/auth/addAccount`,
                 {
