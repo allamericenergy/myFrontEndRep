@@ -152,7 +152,7 @@ const AddMeter = () => {
             await axios.post(
                 `${API}/api/auth/addAccount`,
                 {
-                    CompanyID: formData.CompanyName,
+                    CompanyID: formData.CompanyID,
                     AccountNo: newAccount,
                 },
                 {
@@ -165,7 +165,7 @@ const AddMeter = () => {
             alert('Account Added Successfully');
 
             // Refresh accounts dropdown
-            fetchAccountsByCompany(formData.CompanyName);
+            fetchAccountsByCompany(formData.CompanyID);
 
             // Clear textbox
             setNewAccount('');
