@@ -52,7 +52,7 @@ const AddMeter = () => {
     const [suppliers, setSuppliers] = useState([]);
     const [type, setType] = useState([]);
     const [meterStatus, setMeterStatus] = useState([]);
-
+    const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -92,7 +92,7 @@ const AddMeter = () => {
             ]);
 
             setCompanies(companyRes.data || []);
-           // console.log("CompanyNAme: ",companyRes.data)
+            // console.log("CompanyNAme: ",companyRes.data)
             setProducts(productRes.data || []);
             setOnsitegeneration(onsitegeneration.data || []);
             setIenergybill(ienergybill.data || []);
@@ -149,7 +149,7 @@ const AddMeter = () => {
         try {
 
             const token = localStorage.getItem('token');
-//console.log(formData);
+            //console.log(formData);
             await axios.post(
                 `${API}/api/auth/addAccount`,
                 {
@@ -219,17 +219,21 @@ const AddMeter = () => {
             setLoading(true);
 
             const token = localStorage.getItem('token');
-
+            console.log("Sending:", formData);
             const response = await fetch(
                 `${API}/api/auth/addMeter`,
                 {
-                   method: 'POST',
+                    method: 'POST',
                     headers: {
+                        'Content-Type': 'application/json',
+
                         Authorization: `Bearer ${token}`,
                     },
-                    body:formData,
+                    body: JSON.stringify(formData),
                 }
             );
+            const data = await response.json();
+            console.log("res: ", data);
 
             if (!response.ok) {
 
@@ -340,7 +344,7 @@ const AddMeter = () => {
                         <Grid item xs={12} md={4}>
                             <FormControl sx={{ width: 450 }}>
                                 <InputLabel>Company</InputLabel>
-                                <Select name="id" value={formData.id} onChange={handleChange} label="Company"  >
+                                <Select name="id" value={formData.CompanyID} onChange={handleChange} label="Company"  >
                                     {companies.map((company) =>
                                     (<MenuItem
                                         key={company.id}
@@ -574,7 +578,7 @@ const AddMeter = () => {
                             </FormControl>
                         </Grid>
 
-                         <Divider
+                        <Divider
                             sx={{
                                 width: '100%',
                                 borderColor: '#ccc',
@@ -616,6 +620,7 @@ const AddMeter = () => {
                 </form>
 
             </Paper>
+           
 
         </Box>
     );
